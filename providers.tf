@@ -17,4 +17,13 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+
+  assume_role {
+    role_arn = lookup({
+      dev     = "arn:aws:iam::${var.dev_account_id}:role/terraform-role",
+      staging = "arn:aws:iam::${var.staging_account_id}:role/terraform-role",
+      prod    = "arn:aws:iam::${var.prod_account_id}:role/terraform-role"
+    }, terraform.workspace)
+  }
+}
 }

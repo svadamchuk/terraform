@@ -45,3 +45,18 @@ variable "environment_configs" {
     }
   }
 }
+
+variable "dev_account_id" {
+  description = "AWS Account ID for Development environment"
+  type        = string
+}
+
+variable "staging_account_id" {
+  description = "AWS Account ID for Staging environment"
+  type        = string
+}
+
+variable "prod_account_id" {
+  description = "AWS Account ID for Production environment"
+  type        = string
+}
