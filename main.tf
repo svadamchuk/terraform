@@ -1,3 +1,8 @@
+locals {
+  environment = terraform.workspace
+  config      = var.environment_configs[terraform.workspace]
+}
+
 # Networking module
 module "networking" {
   source = "./modules/networking"
@@ -22,13 +27,14 @@ module "security" {
 module "compute" {
   source = "./modules/compute"
 
-  environment       = var.environment
+  environment       = local.environment
+  instance_type    = local.config.instance_type
+  min_size         = local.config.min_size
+  max_size         = local.config.max_size
+
   ami_id           = "ami-0669b163befffbdfc"  # Amazon Linux 2 AMI ID для eu-central-1
-  instance_type    = "t2.micro"
   security_group_id = module.security.web_security_group_id
   subnet_ids       = module.networking.private_subnet_ids
-  min_size         = 2
-  max_size         = 4
   target_group_arn = ""  # Если будете использовать ALB, добавьте ARN
 }
 
@@ -36,9 +42,10 @@ module "compute" {
 module "database" {
   source = "./modules/database"
 
-  environment       = var.environment
+  environment    = local.environment
+  instance_class = local.config.db_instance_class
+
   allocated_storage = 20
-  instance_class    = "db.t3.micro"
   db_name          = "myappdb"
   db_username      = "dbadmin"
   db_password      = var.db_password
