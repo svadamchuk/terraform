@@ -6,23 +6,20 @@ terraform {
     }
   }
   
-  backend "s3" {
-    bucket         = "terraform-state-bucket-owqc5vdf"
-    key            = "terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-state-locks"
-  }
+  backend "s3" {}
 }
 
 provider "aws" {
   region = var.aws_region
 
-  assume_role {
-    role_arn = lookup({
-      dev     = "arn:aws:iam::${var.dev_account_id}:role/terraform-role",
-      staging = "arn:aws:iam::${var.staging_account_id}:role/terraform-role",
-      prod    = "arn:aws:iam::${var.prod_account_id}:role/terraform-role"
-    }, terraform.workspace)
+  # Используем assume_role только если это не default environment
+  dynamic "assume_role" {
+    for_each = local.environment == "default" ? [] : [1]
+    content {
+      role_arn = format(
+        "arn:aws:iam::%s:role/terraform-role",
+        var.aws_account_ids[local.environment]
+      )
+    }
   }
 }

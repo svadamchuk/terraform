@@ -44,6 +44,18 @@ output "bucket_name" {
   value = aws_s3_bucket.terraform_state.id
 }
 
-output "dynamodb_table" {
+output "dynamodb_table_name" {
   value = aws_dynamodb_table.terraform_locks.name
+}
+
+# Создаем файл конфигурации для основного проекта
+resource "local_file" "backend_config" {
+  filename = "${path.module}/../backend.hcl"
+  content  = <<-EOF
+    bucket         = "${aws_s3_bucket.terraform_state.id}"
+    key            = "terraform.tfstate"
+    region         = "${aws_s3_bucket.terraform_state.region}"
+    encrypt        = true
+    dynamodb_table = "${aws_dynamodb_table.terraform_locks.name}"
+  EOF
 }
