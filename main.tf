@@ -1,8 +1,3 @@
-locals {
-  environment = terraform.workspace
-  config      = var.environment_configs[terraform.workspace]
-}
-
 # Networking module
 module "networking" {
   source = "./modules/networking"

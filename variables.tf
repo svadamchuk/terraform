@@ -25,6 +25,12 @@ variable "environment_configs" {
     db_instance_class = string
   }))
   default = {
+    default = {
+      instance_type     = "t2.micro"
+      min_size         = 1
+      max_size         = 2
+      db_instance_class = "db.t3.micro"
+    }
     dev = {
       instance_type     = "t2.micro"
       min_size         = 1
@@ -46,17 +52,18 @@ variable "environment_configs" {
   }
 }
 
-variable "dev_account_id" {
-  description = "AWS Account ID for Development environment"
+variable "environment_name" {
+  description = "Environment name to use"
   type        = string
+  default     = "default"
 }
 
-variable "staging_account_id" {
-  description = "AWS Account ID for Staging environment"
-  type        = string
-}
-
-variable "prod_account_id" {
-  description = "AWS Account ID for Production environment"
-  type        = string
+variable "aws_account_ids" {
+  description = "Map of workspace names to AWS account IDs"
+  type        = map(string)
+  default = {
+    dev     = "891377320984" 
+    staging = "891377320984"  
+    prod    = "891377320984"  
+  }
 }
