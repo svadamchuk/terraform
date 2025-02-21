@@ -32,8 +32,9 @@ module "compute" {
 
   ami_id            = "ami-0669b163befffbdfc" # Amazon Linux 2 AMI ID для eu-central-1
   security_group_id = module.security.web_security_group_id
-  subnet_ids        = module.networking.private_subnet_ids
-  target_group_arn  = module.networking.target_group_arn
+
+  subnet_ids       = module.networking.private_subnet_ids # Оставляем для обратной совместимости
+  target_group_arn = module.networking.target_group_arn
 }
 
 # # Database module

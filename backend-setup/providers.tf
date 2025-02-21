@@ -15,5 +15,12 @@ terraform {
     }
   }
 
-  # backend "s3" {} #bucket-for-buckets-info
+  backend "s3" {
+    bucket = "bucket-for-buckets-info"
+    key    = "terraform/terraform.tfstate"
+    region = "us-east-1" # укажите ваш регион
+
+    # Рекомендуемые настройки безопасности
+    encrypt = true
+  } #bucket-for-buckets-info
 }

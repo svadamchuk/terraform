@@ -40,3 +40,4 @@ terraform.rc
 terraform.code-workspace
 help_commands
 *.terraform.lock.hcl
+backend.hcl
