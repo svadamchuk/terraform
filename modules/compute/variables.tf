@@ -38,3 +38,8 @@ variable "target_group_arn" {
   type        = string
   default     = ""
 }
+
+variable "website_content" {
+  description = "Content of the index.html file"
+  type        = string
+}

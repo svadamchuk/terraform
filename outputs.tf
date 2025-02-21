@@ -3,10 +3,10 @@ output "vpc_id" {
   value       = module.networking.vpc_id
 }
 
-output "db_endpoint" {
-  description = "Database connection endpoint"
-  value       = module.database.db_instance_endpoint
-}
+# output "db_endpoint" {
+#   description = "Database connection endpoint"
+#   value       = module.database.db_instance_endpoint
+# }
 
 output "bucket_name" {
   description = "Name of the created S3 bucket"

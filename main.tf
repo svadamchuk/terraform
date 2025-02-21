@@ -14,14 +14,16 @@ module "networking" {
 module "security" {
   source = "./modules/security"
 
-  environment         = var.environment
-  vpc_id              = module.networking.vpc_id
-  allowed_cidr_blocks = ["0.0.0.0/0"]
+  environment = var.environment
+  vpc_id      = module.networking.vpc_id
+  # allowed_cidr_blocks = ["0.0.0.0/0"]
 }
 
 # Compute module
 module "compute" {
   source = "./modules/compute"
+
+  website_content = file("${path.module}/site/index.html")
 
   environment   = local.environment
   instance_type = local.config.instance_type
@@ -34,26 +36,26 @@ module "compute" {
   target_group_arn  = module.networking.target_group_arn
 }
 
-# Database module
-module "database" {
-  source = "./modules/database"
+# # Database module
+# module "database" {
+#   source = "./modules/database"
 
-  environment    = local.environment
-  instance_class = local.config.db_instance_class
+#   environment    = local.environment
+#   instance_class = local.config.db_instance_class
 
-  allocated_storage = 20
-  db_name           = "myappdb"
-  db_username       = "dbadmin"
-  db_password       = var.db_password
-  security_group_id = module.security.db_security_group_id
-  subnet_ids        = module.networking.private_subnet_ids
-}
+#   allocated_storage = 20
+#   db_name           = "myappdb"
+#   db_username       = "dbadmin"
+#   db_password       = var.db_password
+#   security_group_id = module.security.db_security_group_id
+#   subnet_ids        = module.networking.private_subnet_ids
+# }
 
 # Storage module
 module "storage" {
   source = "./modules/storage"
 
-  environment        = var.environment
-  bucket_name        = "my-app-storage"
-  versioning_enabled = true
+  environment = var.environment
+  bucket_name = "my-app-storage"
+  #versioning_enabled = true
 }

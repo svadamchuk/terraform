@@ -66,13 +66,19 @@ resource "aws_lb_target_group" "main" {
   health_check {
     enabled             = true
     healthy_threshold   = 2
-    interval            = 30
-    matcher             = "200"
-    path                = "/"
+    unhealthy_threshold = 5
+    interval            = 60
+    matcher             = "200-499" # Принимаем более широкий диапазон ответов
+    path                = "/health" # Отдельный путь для health check
     port                = "traffic-port"
     protocol            = "HTTP"
-    timeout             = 5
-    unhealthy_threshold = 2
+    timeout             = 30 # Увеличиваем timeout
+  }
+
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = 86400
+    enabled         = true
   }
 
   tags = {
