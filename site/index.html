@@ -1,0 +1,43 @@
+# site/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My AWS Infrastructure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My AWS Infrastructure</h1>
+        <p>This server is part of an auto-scaling group.</p>
+        <p>Instance ID: <span id="instance-id">Loading...</span></p>
+        <p>Hostname: <span id="hostname">Loading...</span></p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://169.254.169.254/latest/meta-data/instance-id')
+                .then(response => response.text())
+                .then(instanceId => {
+                    document.getElementById('instance-id').textContent = instanceId;
+                });
+
+            document.getElementById('hostname').textContent = window.location.hostname;
+        });
+    </script>
+</body>
+</html>
