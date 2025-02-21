@@ -58,12 +58,12 @@ variable "environment_name" {
   default     = "default"
 }
 
-variable "aws_account_ids" {
-  description = "Map of workspace names to AWS account IDs"
-  type        = map(string)
-  default = {
-    dev     = "891377320984"
-    staging = "891377320984"
-    prod    = "891377320984"
-  }
-}
+# variable "aws_account_ids" {
+#   description = "Map of workspace names to AWS account IDs"
+#   type        = map(string)
+#   default = {
+#     dev     = "891377320984"
+#     staging = "891377320984"
+#     prod    = "891377320984"
+#   }
+# }
