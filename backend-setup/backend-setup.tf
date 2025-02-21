@@ -9,8 +9,8 @@ resource "random_string" "bucket_suffix" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-state-bucket-${random_string.bucket_suffix.result}"
-  force_destroy = true  # Позволяет удалить даже не пустой бакет. Не использовать для прод, только для временных окружений.
+  bucket        = "terraform-state-bucket-${random_string.bucket_suffix.result}"
+  force_destroy = true # Позволяет удалить даже не пустой бакет. Не использовать для прод, только для временных окружений.
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {

@@ -9,8 +9,8 @@ resource "aws_db_subnet_group" "main" {
 }
 
 resource "aws_db_instance" "main" {
-  identifier           = "${var.environment}-database"
-  allocated_storage    = var.allocated_storage
+  identifier          = "${var.environment}-database"
+  allocated_storage   = var.allocated_storage
   storage_type        = "gp2"
   engine              = "postgres"
   engine_version      = "15.10"
