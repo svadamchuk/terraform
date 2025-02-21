@@ -41,6 +41,15 @@ resource "aws_security_group" "web" {
     description     = "Allow HTTP from ALB"
   }
 
+  # Добавляем правило для SSH
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # В продакшене лучше ограничить конкретными IP
+    description = "Allow SSH access"
+  }
+
   # Разрешаем ICMP для troubleshooting
   ingress {
     from_port       = -1

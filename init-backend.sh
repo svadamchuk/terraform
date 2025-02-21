@@ -4,7 +4,7 @@
 cd backend-setup
 
 # Инициализируем и применяем конфигурацию бэкенда
-terraform init
+terraform init -reconfigure
 terraform apply -auto-approve
 
 # Получаем значения и сохраняем их

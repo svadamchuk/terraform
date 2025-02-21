@@ -5,6 +5,9 @@ resource "aws_launch_template" "web" {
   image_id      = var.ami_id
   instance_type = var.instance_type
 
+  # Добавляем key pair
+  key_name = "IAC_portfolio"
+
   network_interfaces {
     associate_public_ip_address = false
     security_groups             = [var.security_group_id]
@@ -12,64 +15,26 @@ resource "aws_launch_template" "web" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
+                # Обновление системы
+                yum update -y
 
-              # Включаем логирование установки
-              exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-              echo "Starting user_data script..."
+                # Установка httpd
+                yum install httpd -y
 
-              # Update system
-              yum update -y
-              echo "System updated"
+                # Запуск httpd
+                systemctl start httpd
 
-              # Install Apache and additional tools
-              yum install -y httpd curl
-              echo "Apache installed"
+                # Включение httpd при загрузке
+                systemctl enable httpd
 
-              # Create health check page
-              echo "OK" > /var/www/html/health
-              echo "Health check page created"
+                # Main page
+                  cat << 'INDEXEOF' > /var/www/html/index.html
+                  ${var.website_content}
+                  INDEXEOF
 
-              # Create website directories
-              mkdir -p /var/www/html
-              echo "Website directories created"
-
-              # Copy website files
-              cat << 'INDEXEOF' > /var/www/html/index.html
-              ${var.website_content}
-              INDEXEOF
-              echo "Website files copied"
-
-              # Set correct permissions
-              chown -R apache:apache /var/www/html
-              chmod -R 755 /var/www/html
-              echo "Permissions set"
-
-              # Start and enable Apache
-              systemctl start httpd
-              systemctl enable httpd
-              echo "Apache started and enabled"
-
-              # Verify Apache is running
-              if systemctl is-active httpd; then
-                echo "Apache is running"
-              else
-                echo "Apache failed to start"
-                systemctl status httpd
-              fi
-
-              # Test local access
-              echo "Testing local access..."
-              curl -v http://localhost/health
-
-              # Check Apache error log
-              echo "Apache error log:"
-              tail -n 20 /var/log/httpd/error_log
-
-              # Check Apache access log
-              echo "Apache access log:"
-              tail -n 20 /var/log/httpd/access_log
-
-              echo "User data script completed"
+                # Установка прав доступа
+                chmod 644 /var/www/html/index.html
+                chown apache:apache /var/www/html/index.html
               EOF
   )
 
