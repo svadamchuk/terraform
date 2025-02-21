@@ -7,7 +7,7 @@ resource "aws_launch_template" "web" {
 
   network_interfaces {
     associate_public_ip_address = false
-    security_groups            = [var.security_group_id]
+    security_groups             = [var.security_group_id]
   }
 
   user_data = base64encode(<<-EOF
@@ -27,12 +27,12 @@ resource "aws_launch_template" "web" {
 }
 
 resource "aws_autoscaling_group" "web" {
-  desired_capacity    = var.min_size
-  max_size           = var.max_size
-  min_size           = var.min_size
-  target_group_arns  = [var.target_group_arn]
-  vpc_zone_identifier = var.subnet_ids
-  health_check_type  = "ELB"
+  desired_capacity          = var.min_size
+  max_size                  = var.max_size
+  min_size                  = var.min_size
+  target_group_arns         = [var.target_group_arn]
+  vpc_zone_identifier       = var.subnet_ids
+  health_check_type         = "ELB"
   health_check_grace_period = 300
 
   launch_template {
@@ -42,13 +42,13 @@ resource "aws_autoscaling_group" "web" {
 
   tag {
     key                 = "Name"
-    value              = "${var.environment}-web-asg"
+    value               = "${var.environment}-web-asg"
     propagate_at_launch = true
   }
 
   tag {
     key                 = "Environment"
-    value              = var.environment
+    value               = var.environment
     propagate_at_launch = true
   }
 }
@@ -59,18 +59,18 @@ resource "aws_autoscaling_policy" "scale_up" {
   autoscaling_group_name = aws_autoscaling_group.web.name
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = 1
-  cooldown              = 300
+  cooldown               = 300
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   alarm_name          = "${var.environment}-high-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name        = "CPUUtilization"
-  namespace          = "AWS/EC2"
-  period             = 300
-  statistic          = "Average"
-  threshold          = 80
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 80
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web.name
@@ -85,18 +85,18 @@ resource "aws_autoscaling_policy" "scale_down" {
   autoscaling_group_name = aws_autoscaling_group.web.name
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = -1
-  cooldown              = 300
+  cooldown               = 300
 }
 
 resource "aws_cloudwatch_metric_alarm" "low_cpu" {
   alarm_name          = "${var.environment}-low-cpu"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
-  metric_name        = "CPUUtilization"
-  namespace          = "AWS/EC2"
-  period             = 300
-  statistic          = "Average"
-  threshold          = 20
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 20
 
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web.name
