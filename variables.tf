@@ -10,11 +10,11 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "db_password" {
-  description = "Master password for RDS instance"
-  type        = string
-  sensitive   = true
-}
+# variable "db_password" {
+#   description = "Master password for RDS instance"
+#   type        = string
+#   sensitive   = true
+# }
 
 variable "environment_configs" {
   description = "Environment specific configurations"
