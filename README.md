@@ -97,6 +97,153 @@ aws configure
 terraform init -backend-config=backend.hcl
 ```
 
+## Development Setup
+
+### Pre-commit Hooks
+
+The project uses pre-commit hooks to maintain code quality and consistency. These hooks run automatically before each commit to ensure code meets the defined standards.
+
+#### Installation
+
+1. Install pre-commit:
+```bash
+# For Ubuntu/Debian
+sudo apt update
+sudo apt install pre-commit
+
+# For MacOS
+brew install pre-commit
+
+# Using pip
+pip install pre-commit
+```
+
+2. Install terraform-related tools:
+```bash
+# Install tflint
+curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+# Install checkov
+pip install checkov
+```
+
+3. Setup pre-commit hooks in the repository:
+```bash
+# Install the pre-commit hooks
+pre-commit install
+
+# Verify installation
+pre-commit --version
+```
+
+#### Configuration
+
+The project includes a pre-commit configuration file (.pre-commit-config.yaml):
+```yaml
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+      - id: terraform_tflint
+      - id: terraform_validate
+      - id: terraform_checkov
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+```
+
+#### Available Hooks
+
+1. Terraform-specific:
+- `terraform_fmt`: Formats Terraform code according to standard conventions
+- `terraform_docs`: Updates Terraform documentation automatically
+- `terraform_tflint`: Lints Terraform code for possible errors
+- `terraform_validate`: Validates Terraform configurations
+- `terraform_checkov`: Scans for security issues
+
+2. General:
+- `check-merge-conflict`: Checks for merge conflict markers
+- `end-of-file-fixer`: Ensures files end with a newline
+- `trailing-whitespace`: Removes trailing whitespace
+- `check-yaml`: Validates YAML files
+- `check-added-large-files`: Prevents large files from being committed
+
+#### Usage
+
+1. Automatic checks:
+```bash
+# Hooks run automatically on git commit
+git commit -m "Your commit message"
+```
+
+2. Manual runs:
+```bash
+# Run all hooks on all files
+pre-commit run --all-files
+
+# Run specific hook
+pre-commit run terraform_fmt
+pre-commit run terraform_validate
+```
+
+3. Skip hooks (not recommended):
+```bash
+git commit -m "Your message" --no-verify
+```
+
+#### Troubleshooting Pre-commit
+
+1. Hook installation issues:
+```bash
+# Clean and reinstall hooks
+pre-commit uninstall
+pre-commit clean
+pre-commit install
+```
+
+2. Specific hook failures:
+```bash
+# Run with verbose output
+pre-commit run --verbose
+
+# Update hooks to latest versions
+pre-commit autoupdate
+```
+
+3. Common issues:
+- Terraform formatting: Run `terraform fmt -recursive` to format all files
+- Documentation: Ensure proper Terraform documentation blocks exist
+- YAML validation: Check YAML file syntax
+- Large files: Keep committed files under size limit
+
+#### Best Practices
+
+1. Always run hooks before pushing:
+```bash
+# Run hooks manually before push
+pre-commit run --all-files
+```
+
+2. Keep hooks updated:
+```bash
+# Update hooks regularly
+pre-commit autoupdate
+```
+
+3. Regular maintenance:
+- Review and update hook versions
+- Add new hooks as needed
+- Remove unused hooks
+- Adjust hook configurations based on project needs
+
 ## Environment Management
 
 The project uses Terraform workspaces for environment management:
