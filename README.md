@@ -97,7 +97,7 @@ git clone <repository-url>
 cd <repository-name>
 ```
 
-2. Install backend infrastructure:
+2. Install backend infrastructure: s
 ```bash
 # Initialize backend infrastructure
 chmod +x backend.sh
