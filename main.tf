@@ -30,10 +30,10 @@ module "compute" {
   min_size      = local.config.min_size
   max_size      = local.config.max_size
 
-  ami_id            = "ami-0669b163befffbdfc" # Amazon Linux 2 AMI ID для eu-central-1
+  ami_id            = "ami-0669b163befffbdfc" # Amazon Linux 2 AMI ID for eu-central-1
   security_group_id = module.security.web_security_group_id
 
-  subnet_ids       = module.networking.private_subnet_ids # Оставляем для обратной совместимости
+  subnet_ids       = module.networking.private_subnet_ids # Keeping for backward compatibility
   target_group_arn = module.networking.target_group_arn
 }
 

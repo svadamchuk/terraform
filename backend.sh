@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Функция для вывода справки
+# Function to display help
 usage() {
     echo "Usage: $0 <command>"
     echo "Commands:"
@@ -10,28 +10,28 @@ usage() {
     exit 1
 }
 
-# Проверка наличия параметра
+# Check if parameter exists
 if [ $# -ne 1 ]; then
     usage
 fi
 
-# Обработка команд
+# Process commands
 case "$1" in
     "create")
-        # Переходим в директорию backend-setup
+        # Navigate to backend-setup directory
         cd backend-setup
-        # Инициализируем и применяем конфигурацию бэкенда
+        # Initialize and apply backend configuration
         terraform init -reconfigure
         terraform apply -auto-approve
 
-        # Получаем значения и сохраняем их
+        # Get values and save them
         BUCKET_NAME=$(terraform output -raw bucket_name)
         DYNAMO_TABLE=$(terraform output -raw dynamodb_table_name)
 
-        # Возвращаемся в корневую директорию
+        # Return to root directory
         cd ..
 
-        # Инициализируем основной проект с новым бэкендом
+        # Initialize main project with new backend
         terraform init -backend-config=backend.hcl -reconfigure
 
         echo "Backend initialized successfully!"
@@ -40,7 +40,7 @@ case "$1" in
         ;;
 
     "delete")
-        # переходим в backend-setup и уничтожаем бэкенд
+        # Navigate to backend-setup and destroy backend
         cd backend-setup
         terraform destroy -auto-approve
         cd ..
@@ -49,7 +49,7 @@ case "$1" in
         ;;
 
     "view")
-        # Показываем состояние бэкенда
+        # Show backend state
         echo -e "\nBackend infrastructure state:"
         cd backend-setup
         terraform show
