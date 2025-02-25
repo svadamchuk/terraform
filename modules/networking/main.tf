@@ -14,7 +14,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnets[count.index]
   availability_zone       = var.availability_zones[count.index]
-  map_public_ip_on_launch = true # Автоматически назначать публичные IP
+  map_public_ip_on_launch = true # Auto-assign public IPs
 
   tags = {
     Name        = "${var.environment}-public-subnet-${count.index + 1}"
@@ -22,14 +22,14 @@ resource "aws_subnet" "public" {
   }
 }
 
-# Ассоциируем Route Table с публичными подсетями
+# Associate Route Table with public subnets
 resource "aws_route_table_association" "public" {
   count          = length(var.public_subnets)
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
-# Создаем Route Table для публичных подсетей
+# Create Route Table for public subnets
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 

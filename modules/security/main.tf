@@ -1,10 +1,10 @@
-# Security Group для базы данных
+# Security Group for database
 resource "aws_security_group" "db" {
   name        = "${var.environment}-db-sg"
   description = "Security group for database"
   vpc_id      = var.vpc_id
 
-  # Разрешаем входящий трафик только от веб-серверов на порт PostgreSQL
+  # Allow incoming traffic only from web servers on PostgreSQL port
   ingress {
     from_port       = 5432
     to_port         = 5432
@@ -12,7 +12,7 @@ resource "aws_security_group" "db" {
     security_groups = [aws_security_group.web.id]
   }
 
-  # Разрешаем весь исходящий трафик
+  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -26,13 +26,13 @@ resource "aws_security_group" "db" {
   }
 }
 
-# Security Group для веб-серверов
+# Security Group for web servers
 resource "aws_security_group" "web" {
   name        = "${var.environment}-web-sg"
   description = "Security group for web servers"
   vpc_id      = var.vpc_id
 
-  # Разрешаем входящий HTTP трафик от ALB
+  # Allow incoming HTTP traffic from ALB
   ingress {
     from_port       = 80
     to_port         = 80
@@ -41,7 +41,7 @@ resource "aws_security_group" "web" {
     description     = "Allow HTTP from ALB"
   }
 
-  # Разрешаем ICMP для troubleshooting
+  # Allow ICMP for troubleshooting
   ingress {
     from_port       = -1
     to_port         = -1
@@ -64,13 +64,13 @@ resource "aws_security_group" "web" {
   }
 }
 
-# Security Group для ALB
+# Security Group for ALB
 resource "aws_security_group" "alb" {
   name        = "${var.environment}-alb-sg"
   description = "Security group for ALB"
   vpc_id      = var.vpc_id
 
-  # Разрешаем входящий HTTP трафик
+  # Allow incoming HTTP traffic
   ingress {
     from_port   = 80
     to_port     = 80
@@ -85,7 +85,7 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Разрешаем исходящий трафик к EC2
+  # Allow outbound traffic to EC2
   egress {
     from_port   = 0
     to_port     = 0

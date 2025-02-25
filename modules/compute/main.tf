@@ -13,16 +13,16 @@ resource "aws_launch_template" "web" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
-                # Обновление системы
+                # System update
                 yum update -y
 
-                # Установка httpd
+                # Install httpd
                 yum install httpd -y
 
-                # Запуск httpd
+                # Start httpd
                 systemctl start httpd
 
-                # Включение httpd при загрузке
+                # Enable httpd on boot
                 systemctl enable httpd
 
                 # Main page
@@ -30,7 +30,7 @@ resource "aws_launch_template" "web" {
                   ${var.website_content}
                   INDEXEOF
 
-                # Установка прав доступа
+                # Set permissions
                 chmod 644 /var/www/html/index.html
                 chown apache:apache /var/www/html/index.html
               EOF
