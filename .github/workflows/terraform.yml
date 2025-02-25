@@ -39,7 +39,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-          bash -c './init-backend.sh'
+          bash -c './backend.sh create'
           terraform init
 
       - name: Select Workspace
