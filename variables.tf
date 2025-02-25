@@ -10,12 +10,6 @@ variable "environment" {
   default     = "dev"
 }
 
-# variable "db_password" {
-#   description = "Master password for RDS instance"
-#   type        = string
-#   sensitive   = true
-# }
-
 variable "environment_configs" {
   description = "Environment specific configurations"
   type = map(object({
@@ -57,13 +51,3 @@ variable "environment_name" {
   type        = string
   default     = "default"
 }
-
-# variable "aws_account_ids" {
-#   description = "Map of workspace names to AWS account IDs"
-#   type        = map(string)
-#   default = {
-#     dev     = "891377320984"
-#     staging = "891377320984"
-#     prod    = "891377320984"
-#   }
-# }

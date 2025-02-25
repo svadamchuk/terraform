@@ -91,11 +91,11 @@ resource "aws_lb_target_group" "main" {
     healthy_threshold   = 2
     unhealthy_threshold = 5
     interval            = 60
-    matcher             = "200-499" # Принимаем более широкий диапазон ответов
-    path                = "/"       #"/health" # Отдельный путь для health check
+    matcher             = "200-299"
+    path                = "/"
     port                = "traffic-port"
     protocol            = "HTTP"
-    timeout             = 30 # Увеличиваем timeout
+    timeout             = 30
   }
 
   stickiness {
@@ -121,7 +121,6 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-# Создаем EIP для NAT Gateway
 resource "aws_eip" "nat" {
   domain = "vpc"
   tags = {
@@ -130,10 +129,9 @@ resource "aws_eip" "nat" {
   }
 }
 
-# Создаем NAT Gateway
 resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id # Размещаем в первой публичной подсети
+  subnet_id     = aws_subnet.public[0].id
 
   tags = {
     Name        = "${var.environment}-nat"
@@ -143,7 +141,6 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 }
 
-# Route Table для приватных подсетей
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
@@ -158,7 +155,6 @@ resource "aws_route_table" "private" {
   }
 }
 
-# Ассоциация Route Table с приватными подсетями
 resource "aws_route_table_association" "private" {
   count          = length(var.private_subnets)
   subnet_id      = aws_subnet.private[count.index].id

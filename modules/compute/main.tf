@@ -4,9 +4,7 @@ resource "aws_launch_template" "web" {
   name_prefix   = "${var.environment}-web-template"
   image_id      = var.ami_id
   instance_type = var.instance_type
-
-  # Добавляем key pair
-  key_name = "IAC_portfolio"
+  key_name      = "IAC_portfolio"
 
   network_interfaces {
     associate_public_ip_address = false
@@ -71,7 +69,7 @@ resource "aws_autoscaling_group" "web" {
   }
 }
 
-# Добавляем автомасштабирование
+
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "${var.environment}-scale-up"
   autoscaling_group_name = aws_autoscaling_group.web.name
