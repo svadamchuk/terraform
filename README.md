@@ -44,32 +44,49 @@ This project implements a complete AWS infrastructure using Terraform, featuring
 ## Project Structure
 ```
 .
-├── backend-setup/
-│   ├── main.tf
-│   └── outputs.tf
-├── modules/
-│   ├── compute/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── outputs.tf
-│   ├── networking/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── outputs.tf
-│   └── security/
-│       ├── main.tf
-│       ├── variables.tf
-│       └── outputs.tf
-├── site/
-│   └── index.html
-├── .github/
-│   └── workflows/
-│       └── terraform.yml
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── providers.tf
-└── README.md
+|---.gitignore
+|---.pre-commit-config.yaml
+|---backend.sh
+|---locals.tf
+|---main.tf
+|---outputs.tf
+|---providers.tf
+|---README.md
+|---variables.tf
+|---.github
+|   `---workflows
+|       `---terraform.yml
+|---backend-setup
+|   |---backend-setup.tf
+|   `---providers.tf
+|---modules
+|   |---compute
+|   |   |---main.tf
+|   |   |---outputs.tf
+|   |   |---providers.tf
+|   |   `---variables.tf
+|   |---database
+|   |   |---main.tf
+|   |   |---outputs.tf
+|   |   |---providers.tf
+|   |   `---variables.tf
+|   |---networking
+|   |   |---main.tf
+|   |   |---outputs.tf
+|   |   |---providers.tf
+|   |   `---variables.tf
+|   |---security
+|   |   |---main.tf
+|   |   |---outputs.tf
+|   |   |---providers.tf
+|   |   `---variables.tf
+|   `---storage
+|       |---main.tf
+|       |---outputs.tf
+|       |---providers.tf
+|       `---variables.tf
+`---site
+    `---index.html
 ```
 
 ## Initial Setup
@@ -83,18 +100,13 @@ cd <repository-name>
 2. Install backend infrastructure:
 ```bash
 # Initialize backend infrastructure
-chmod +x init-backend.sh
-./init-backend.sh
+chmod +x backend.sh
+./backend.sh
 ```
 
 3. Configure AWS credentials:
 ```bash
 aws configure
-```
-
-4. Initialize Terraform:
-```bash
-terraform init -backend-config=backend.hcl
 ```
 
 ## Development Setup
@@ -145,7 +157,6 @@ repos:
     rev: v1.83.5
     hooks:
       - id: terraform_fmt
-      - id: terraform_docs
       - id: terraform_tflint
       - id: terraform_validate
       - id: terraform_checkov
@@ -164,7 +175,6 @@ repos:
 
 1. Terraform-specific:
 - `terraform_fmt`: Formats Terraform code according to standard conventions
-- `terraform_docs`: Updates Terraform documentation automatically
 - `terraform_tflint`: Lints Terraform code for possible errors
 - `terraform_validate`: Validates Terraform configurations
 - `terraform_checkov`: Scans for security issues
@@ -293,6 +303,9 @@ variable "environment_configs" {
 
 ### Manual Deployment
 ```bash
+# Create S3 backend
+./backend.sh
+
 # Plan changes
 terraform plan
 
@@ -302,9 +315,9 @@ terraform apply
 
 ### Automated Deployment (GitHub Actions)
 The project includes CI/CD pipeline with GitHub Actions:
-- Automatic planning on pull requests
+- Automatic planning for dev environment on pull requests
 - Plan output as PR comment
-- Automatic deployment to dev environment
+- Automatic deployment to dev environment after
 - Manual approval for production deployment
 
 ## Web Application

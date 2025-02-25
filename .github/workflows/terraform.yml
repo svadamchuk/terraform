@@ -171,7 +171,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Notify Slack
-        uses: 8398a7/action-slack@v3
+        uses: 8398a7/action-slack@v3 #https://github.com/marketplace/actions/action-slack
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
