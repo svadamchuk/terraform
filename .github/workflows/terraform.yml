@@ -37,13 +37,12 @@ jobs:
           aws-region: eu-central-1
           #role-to-assume: {{ secrets.AWS_ROLE_ARN }}
 
+      - name: Select Workspace
+        run: terraform workspace select dev || terraform workspace new dev
+
       - name: Terraform Init
         run: |
           bash -c './backend.sh create'
-          terraform init
-
-      - name: Select Workspace
-        run: terraform workspace select dev || terraform workspace new dev
 
       - name: Terraform Plan
         id: plan
@@ -93,11 +92,15 @@ jobs:
           aws-region: eu-central-1
           #role-to-assume: {{ secrets.AWS_ROLE_ARN }}
 
-      - name: Terraform Init
-        run: terraform init
-
       - name: Select Workspace
         run: terraform workspace select dev || terraform workspace new dev
+
+      - name: Terraform Init
+        run: |
+          bash -c './backend.sh create'
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
@@ -125,13 +128,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-          #role-to-assume: {{ secrets.AWS_ROLE_ARN }}
-
-      - name: Terraform Init
-        run: terraform init
 
       - name: Select Workspace
         run: terraform workspace select prod || terraform workspace new prod
+
+      - name: Terraform Init
+        run: |
+          bash -c './backend.sh create'
 
       - name: Terraform Plan
         id: plan
@@ -161,11 +164,12 @@ jobs:
           aws-region: eu-central-1
           #role-to-assume: {{ secrets.AWS_ROLE_ARN }}
 
-      - name: Terraform Init
-        run: terraform init
-
       - name: Select Workspace
         run: terraform workspace select prod || terraform workspace new prod
+
+      - name: Terraform Init
+        run: |
+          bash -c './backend.sh create'
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
